@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block t_nav %}
+
+    <a class="n6" href="javascript:void(0)" onclick="backpage()" id="a_back">返回
+    <a href="{% url 'blog_index' %}" class="n1">网站首页</a>
+    <a href="{% url 'get_type_articcles' article.type.id %}" class="n2">{{ article.type }}</a>
+    {% if article.group %}
+        <a class="n3" href="{% url 'get_group_articcles' article.group.id %}">{{ article.group }}</a>
+    {% endif %}
+    <div class="n4">{{ article.title }}</div>
+{% endblock %}
+{% block html_content %}
+
+    <div class="infosbox">
+        <div class="newsview">
+
+
+            <h3 class="news_title">{{ article.title }}</h3>
+            <div class="bloginfo">
+                <ul>
+                    <li class="author">{{ article.auther.name }}</li>
+                    <li class="lmname"><a href="{% url 'get_type_articcles' article.type.id %}">{{ article.type }}</a>
+                    </li>
+                    <li class="timer">{{ article.add_date|date:'Y-m-d' }}</li>
+                    <li class="view">{{ article.read_times }}</li>
+                    <li class="like">{{ article.good }}</li>
+                </ul>
+            </div>
+            <div class="cloud">
+                <ul>
+                    {% for tag in article.tags.all %}
+
+                        <a href="{% url 'get_tag_articcles' tag.id %}">{{ tag.name }}</a>
+
+                    {% endfor %}
+
+                </ul>
+            </div>
+            {#      <div class="news_about"><strong>简介</strong>个人博客，用来做什么？我刚开始就把它当做一个我吐槽心情的地方，也就相当于一个网络记事本，写上一些关于自己生活工作中的小情小事，也会放上一些照片，音乐。每天工作回家后就能访问自己的网站，一边听着音乐，一边写写文章。</div>#}
+            <div class="news_con">{{ article.content|safe }}</div>
+        </div>
+
+        <div class="nextinfo">
+            <p>上一篇：{% if pre_article %}
+                <a href="{% url 'article_details' pre_article.id %}">{{ pre_article.title|truncatechars:50 }}</a>{% else %}
+                没有了~{% endif %}</p>
+            <p>下一篇：{% if next_article %}
+                <a href="{% url 'article_details' next_article.id %}">{{ next_article.title|truncatechars:50 }}</a>{% else %}
+                没有了~{% endif %}</p>
+        </div>
+        <div class="otherlink">
+            <h2>相关文章</h2>
+            <ul>
+                {% for article in reakated_article %}
+                    <li><a href="{% url 'article_details' article.id %}"
+                           title="{{ article.title }}">{{ article.title }}</a></li>
+                {% endfor %}
+
+            </ul>
+        </div>
+        <div class="news_pl">
+            <h2>文章评论</h2>
+            <ul>
+                <div class="gbko">
+                    {% for comment in comments %}
+                        <div class="media">
+                            <div class="media-left">
+                                <span>#{{ forloop.counter }}</span>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="color: #3a6ab5">{{ comment.commenter }}</h4>
+                                <div class="content">{{ comment.content}}</div>
+
+                                <div style="text-align: right"><input type="button" commenter="{{ comment.commenter }}"
+                                                                      parent_id="{{ comment.id }}"
+                                                                      class="btn-xs btn-default reply-comment"
+                                                                      value="回复">
+                                </div>
+                                {% for c_comment in comment.cc %}
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <a href="#">
+                                                <div style="width: 15px;"></div>
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading" style="color: #3a6ab5">{{ c_comment.commenter }}</h4>
+                                            <div class="content">回复 <span style="color:#009688">{{ c_comment.reply_to }}</span>:{{ c_comment.content }}</div>
+                                            <div style="text-align: right"><input type="button"
+                                                                                  commenter="{{ c_comment.commenter }}"
+                                                                                  parent_id="{{ comment.id }}"
+                                                                                  class="btn-xs btn-default reply-comment"
+                                                                                  value="回复"></div>
+
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                            </div>
+                            <hr>
+                        </div>
+                    {% endfor %}
+
+
+                    {% if user_ip %}
+
+                        <form action="{% url 'post_comment' %}" method="post" id="comment_form">
+                            {% csrf_token %}
+                            <textarea id="content" cols="30" rows="10" name="content" maxlength="400"
+                                      style="width: 100%"></textarea>
+                            <input type="hidden" value="{{ article.id }}" name="aid">
+                            <input type="hidden" name="parent_id" id="parent_id">
+                            <input type="hidden" name="commenter" id="commenter">
+
+                            <input type="button" value="评论原文" id="comment_no_parent" class="pull-left btn btn-default">
+                            <input type="submit" value="发布" class="pull-right btn btn-default">
+                            <span class="pull-right" style="padding: 5px;">{{ user_ip }}</span>
+                        </form>
+                        <script>
+                            const $content = $("#content")
+
+                            $("#comment_form").on('submit', function () {
+                                var content = $("#content").val()
+                                if (!$.trim(content)) return false
+                            })
+
+                            $(".reply-comment").on('click', function () {
+                                const parent_id = $(this).attr('parent_id')
+                                const commenter = $(this).attr('commenter')
+                                const content = $(this).parent().siblings('.content').html()
+                                $content.focus()
+                                $content.attr('placeholder', `回复对象:${commenter}\n他的回复:${content}`);
+
+                                $("#parent_id").val(parent_id)
+                                $("#commenter").val(commenter)
+                                console.log(parent_id)
+                                console.log(commenter)
+                            })
+
+                            $("#comment_no_parent").on('click', function () {
+                                $("#parent_id").val("")
+                                $("#commenter").val("")
+                                $content.attr('placeholder', ``);
+                            })
+                        </script>
+
+                    {% else %}
+                        Sorry,获取您的IP失败,您无法回复,有任何建议和意见可以通过xth9363@163.com邮箱联系我~谢谢!{% endif %}
+
+                </div>
+            </ul>
+
+
+        </div>
+    </div>
+
+{% endblock %}
+
