@@ -1,0 +1,8 @@
+/myblog/settins.py
+/**/migrations/
+!/**/migrations/__init__.py
+/static/images/**
+/media/**
+/static_collect/**
+
+
