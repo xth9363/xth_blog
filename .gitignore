@@ -1,0 +1,17 @@
+/my_blog/settings.py
+/**/migrations/**
+/static/images/**
+/media/**
+/static_collect/**
+
+!/**/migrations/__init__.py
+!.gitignore
+!/static/images/my_img.jpg
+!/media/my_img.jpg
+!/static_collect/my_img.jpg
+
+
+
+
+
+
