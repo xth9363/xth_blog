@@ -1,4 +1,7 @@
+// $(window).load(function(){$("pre").addClass("prettyprint linenums");prettyPrint();}
+
 $(function () {
+    // console.log('$("pre").addClass("prettyprint linenums");prettyPrint();')
     //判断是否显示返回键
     $("#b_back").hide()
      if (document.referrer !== '' && document.referrer.indexOf(window.location.host) > -1) {

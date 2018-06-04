@@ -68,7 +68,7 @@
                                 <span>#{{ forloop.counter }}</span>
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading" style="color: #3a6ab5">{{ comment.commenter }}</h4>
+                                <h4 class="media-heading" style="color: #3a6ab5">{{ comment.commenter }}<span style="color: gray;font-size: small" class="pull-right">{{ comment.add_date|date:'Y-m-d' }}</span> </h4>
                                 <div class="content">{{ comment.content}}</div>
 
                                 <div style="text-align: right"><input type="button" commenter="{{ comment.commenter }}"
@@ -84,7 +84,7 @@
                                             </a>
                                         </div>
                                         <div class="media-body">
-                                            <h4 class="media-heading" style="color: #3a6ab5">{{ c_comment.commenter }}</h4>
+                                            <h4 class="media-heading" style="color: #3a6ab5">{{ c_comment.commenter }}<span style="color: gray;font-size: small" class="pull-right">{{ c_comment.add_date|date:'Y-m-d' }}</span></h4>
                                             <div class="content">回复 <span style="color:#009688">{{ c_comment.reply_to }}</span>:{{ c_comment.content }}</div>
                                             <div style="text-align: right"><input type="button"
                                                                                   commenter="{{ c_comment.commenter }}"
