@@ -1,6 +1,5 @@
 /my_blog/settings.py
 /**/migrations/**
-/static/images/**
 /media/**
 /static_collect/**
 
