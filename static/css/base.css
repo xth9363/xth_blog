@@ -19,8 +19,7 @@ img {
 }
 
 ul, li {
-    /*list-style: none;*/
-    list-style: decimal;
+    list-style: none;
 }
 
 a {

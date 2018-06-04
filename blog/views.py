@@ -96,6 +96,7 @@ def post_comment(request):
         return Http404()
 
 
+
 def get_visitor_ip(req):
     ip = False
     if 'HTTP_X_FORWARDED_FOR' in req.META:
