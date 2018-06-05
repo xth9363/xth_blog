@@ -19,6 +19,8 @@ LIMIT = 6
 # Create your views here.
 
 def index(request):
+    # from django.core.mail import send_mail  # 导入django发送邮件模块
+    # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
     # raise Http404('not')
     articles = models.Article.objects.filter().order_by('-add_date')[:10]
 
@@ -94,7 +96,6 @@ def post_comment(request):
             raise Http404('为了使用本功能,请开启您浏览器的Cookie')
     else:
         return Http404()
-
 
 
 def get_visitor_ip(req):
@@ -224,3 +225,15 @@ def group_list(request):
 def visitor(request):
     url = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=220.175.71.177'
     return HttpResponse("查询访问用户的所属地")
+
+
+def e_404(request):
+    return render(request, '404.html')
+
+
+def e_500(request):
+    return render(request, '500.html')
+
+
+def e_403(request):
+    return render(request, '403.html')

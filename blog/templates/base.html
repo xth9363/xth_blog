@@ -13,7 +13,7 @@
     <link href="/static/css/myRewards.css" rel="stylesheet">
     <link href="/static/css/index.css" rel="stylesheet">
     <link href="/static/css/m.css" rel="stylesheet">
-        <link href="/static/css/prettify.css" rel="stylesheet">
+    <link href="/static/css/prettify.css" rel="stylesheet">
 
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
@@ -105,7 +105,7 @@
     <!--menu end-->
     <!--mnav begin-->
     <div id="mnav">
-        <h2><a href="http://www.yangqq.com" class="mlogo">夏天浩博客</a><span class="navicon"></span></h2>
+        <h2><a href="{% url 'blog_index' %}" class="mlogo">夏天浩博客</a><span class="navicon"></span></h2>
         <dl class="list_dl">
             <dt class="list_dt"><a href="{% url 'blog_index' %}">网站首页</a></dt>
             <dt class="list_dt"><a href="{% url "get_groups" %}">专题</a></dt>
@@ -207,8 +207,6 @@
 <a href="#" class="cd-top">Top</a>
 
 
-
-
 <script>
     window.tctipConfig = {
         //最上面的文字
@@ -220,18 +218,28 @@
         //侧边栏背景颜色
         siderBgcolor: "#323d45",
         //整个侧边栏的高度设置可以px，em，或百分比
-        siderTop:"120px",
+        siderTop: "120px",
         //底部文字
-        buttomText:"本栏的技术支持",
+        buttomText: "本栏的技术支持",
         //底部文字链接
-        buttomLink:"https://github.com/haddyyang/tctip",
+        buttomLink: "https://github.com/haddyyang/tctip",
 
         //显示项
-        list:{
-            notice: {icon: "/static/images/icon/tip.png", name:"公告栏", className:"myR-on", text: '暂无公告'},
-            my_wechar: {icon: "/static/images/icon/weixin.png", name:"我的微信", desc: "我的微信", qrimg: "/static/images/my_wechat.png"},
-            my_qq: {icon: "/static/images/icon/qq_icon.png", name:"我的QQ", desc: "我的QQ", qrimg: "/static/images/my_qq.png"},
-           // my_qq: {icon: "/static/images/icon/qq_icon.png", name:"我的QQ", desc: "我的QQ", text: "<a href=\"http://wpa.qq.com/msgrd?v=3&uin=348396038&site=qq&menu=yes\">348396038</a>"}
+        list: {
+            notice: {icon: "/static/images/icon/tip.png", name: "公告栏", className: "myR-on", text: '暂无公告'},
+            my_wechar: {
+                icon: "/static/images/icon/weixin.png",
+                name: "我的微信",
+                desc: "我的微信",
+                qrimg: "/static/images/my_wechat.png"
+            },
+            my_qq: {
+                icon: "/static/images/icon/qq_icon.png",
+                name: "我的QQ",
+                desc: "我的QQ",
+                qrimg: "/static/images/my_qq.png"
+            },
+            // my_qq: {icon: "/static/images/icon/qq_icon.png", name:"我的QQ", desc: "我的QQ", text: "<a href=\"http://wpa.qq.com/msgrd?v=3&uin=348396038&site=qq&menu=yes\">348396038</a>"}
         }
     };
 </script>
@@ -241,8 +249,6 @@
 </body>
 
 <script>
-    {% if js %}
-        {{ js }}
-    {% endif %}
+
 </script>
 </html>
