@@ -26,10 +26,9 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器用
 ]
-
-handler404='blog.views.e_404'
-handler403='blog.views.e_403'
-handler500='blog.views.e_500'
-
-
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'blog.views.e_404'
+handler500 = 'blog.views.e_500'
+handler403 = 'blog.views.e_403'
+
