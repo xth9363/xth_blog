@@ -30,5 +30,6 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'blog.views.e_404'
 handler500 = 'blog.views.e_500'
+handler502 = 'blog.views.e_502'
 handler403 = 'blog.views.e_403'
 
