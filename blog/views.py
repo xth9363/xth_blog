@@ -231,7 +231,7 @@ def e_404(request, exception):
     return render(request, '404.html', {})
 
 
-def e_500(request):
+def e_500(request):  # 这里一个坑
     return render(request, '500.html', {})
 
 

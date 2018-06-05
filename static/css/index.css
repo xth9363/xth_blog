@@ -183,7 +183,7 @@
 /*blogsbox*/
 .blogsbox {
     width: 66%;
-    overflow: hidden;
+    /*overflow: hidden;*/
     float: left
 }
 
