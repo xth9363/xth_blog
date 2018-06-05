@@ -227,22 +227,34 @@ def visitor(request):
     return HttpResponse("查询访问用户的所属地")
 
 
-def e_404(request, exception):
-    response = render_to_response('404.html', {})
-    response.status_code = 404
-    return response
+def e_404(request):
+    return render_to_response(request, '404.html', {})
 
 
-def e_500(request, exception):
-    response = render_to_response('500.html', {})
-    response.status_code = 500
-    return response
+def e_500(request):
+    return render_to_response(request, '500.html', {})
 
 
-def e_403(request, exception):
-    response = render_to_response('403.html', {})
-    response.status_code = 403
-    return response
+def e_403(request):
+    return render_to_response(request, '403.html', {})
+
+
+# def e_404(request, exception):
+#     response = render_to_response('404.html', {})
+#     response.status_code = 404
+#     return response
+#
+#
+# def e_500(request, exception):
+#     response = render_to_response('500.html', {})
+#     response.status_code = 500
+#     return response
+#
+#
+# def e_403(request, exception):
+#     response = render_to_response('403.html', {})
+#     response.status_code = 403
+#     return response
 
 
 def raise_error(request, code):
