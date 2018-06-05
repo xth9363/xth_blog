@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404, redirect, HttpResponseRedirect,render_to_response
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect, HttpResponseRedirect, render_to_response
 from django.urls import reverse
 
 from blog import models
@@ -23,7 +23,6 @@ def index(request):
     # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
     # raise Http404('not')
     articles = models.Article.objects.filter().order_by('-add_date')[:10]
-
 
     # print(articles.query.__str__())
     context = {
@@ -248,9 +247,9 @@ def e_403(request, exception):
 
 def raise_error(request, code):
     from blog.utils._asd import is_int
-    codes=[404,403,500]
+    codes = [404, 403, 500]
     if is_int(code) and int(code) in codes:
-        response = render_to_response('%s.html'%code, {})
+        response = render_to_response('%s.html' % code, {})
         response.status_code = int(code)
         return response
     else:
