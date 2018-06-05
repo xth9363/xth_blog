@@ -16,6 +16,7 @@ urlpatterns = [
     path('search/', views.article_search, name="article_search"),
     path('groups/', views.group_list, name="get_groups"),
     path('post_comment/', views.post_comment, name="post_comment"),
+    path('raise_error/<int:code>', views.raise_error, name="raise_error"),
 ]
 
 # handler404 = views.page_not_found

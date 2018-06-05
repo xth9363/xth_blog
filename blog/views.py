@@ -227,13 +227,22 @@ def visitor(request):
     return HttpResponse("查询访问用户的所属地")
 
 
-def e_404(request,exception):
+def e_404(request, exception):
     return render(request, '404.html')
 
 
-def e_500(request,exception):
+def e_500(request, exception):
     return render(request, '500.html')
 
 
-def e_403(request,exception):
+def e_403(request, exception):
     return render(request, '403.html')
+
+
+def raise_error(request, code):
+    from blog.utils._asd import is_int
+    codes=[404,403,500]
+    if is_int(code) and int(code) in codes:
+        return HttpResponse(status=int(code))
+    else:
+        return HttpResponse(status=404)
