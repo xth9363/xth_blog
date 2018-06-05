@@ -141,7 +141,7 @@ class Article(models.Model):
         verbose_name_plural = '文章'
 
     auther = models.ForeignKey(UserProfile, verbose_name="作者", help_text='作者', on_delete=models.CASCADE, default=1)
-    title = models.CharField(max_length=32, verbose_name="文章标题", help_text="文章标题")
+    title = models.CharField(max_length=100, verbose_name="文章标题", help_text="文章标题")
     content = RichTextUploadingField(verbose_name="内容", help_text="内容")
     add_date = models.DateTimeField()
     read_times = models.IntegerField(default=0, verbose_name="阅读次数", help_text="所属系列")
@@ -150,9 +150,9 @@ class Article(models.Model):
     bad = models.IntegerField(default=0, verbose_name="踩", help_text="踩")
     group = models.ForeignKey(to="ArticleGroup", blank=True, null=True, verbose_name="所属系列", help_text="所属系列",
                               on_delete=models.CASCADE)
-    type = models.ForeignKey(to="ArticleType", verbose_name="文章类型", blank=True, null=True, help_text="文章类型",
+    type = models.ForeignKey(to="ArticleType", verbose_name="文章类型", help_text="文章类型",
                              on_delete=models.CASCADE)
-    tags = models.ManyToManyField("ArticleTag", related_name="articles", )
+    tags = models.ManyToManyField("ArticleTag", related_name="articles", blank=True, null=True, )
 
     def __str__(self):
         return "%s" % (self.title)
