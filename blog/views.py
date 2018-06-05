@@ -231,15 +231,15 @@ def e_404(request, exception):
     return render(request, '404.html', {})
 
 
-def e_500(request, exception):
+def e_500(request):
     return render(request, '500.html', {})
 
 
-def e_502(request, exception):
+def e_502(request):
     return render(request, '502.html', {})
 
 
-def e_403(request, exception):
+def e_403(request):
     return render(request, '403.html', {})
 
 
