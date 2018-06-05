@@ -226,20 +226,16 @@ def visitor(request):
     url = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=220.175.71.177'
     return HttpResponse("查询访问用户的所属地")
 
-import logging
 def e_404(request, exception):
-    logging.debug(exception)
-    return render_to_response(request, '404.html', {})
+    return render(request, '404.html', {})
 
 
 def e_500(request, exception):
-    logging.debug(exception)
-    return render_to_response(request, '500.html', {})
+    return render(request, '500.html', {})
 
 
 def e_403(request, exception):
-    logging.debug(exception)
-    return render_to_response(request, '403.html', {})
+    return render(request, '403.html', {})
 
 
 # def e_404(request, exception):
