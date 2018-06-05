@@ -23,6 +23,7 @@ def index(request):
     # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
     # raise Http404('not')
     articles = models.Article.objects.filter().order_by('-add_date')[:10]
+    sadaasd
 
     # print(articles.query.__str__())
     context = {
