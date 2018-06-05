@@ -227,13 +227,13 @@ def visitor(request):
     return HttpResponse("查询访问用户的所属地")
 
 
-def e_404(request):
+def e_404(request,exception):
     return render(request, '404.html')
 
 
-def e_500(request):
+def e_500(request,exception):
     return render(request, '500.html')
 
 
-def e_403(request):
+def e_403(request,exception):
     return render(request, '403.html')
