@@ -15,8 +15,6 @@ from django.views.decorators.cache import cache_page
 from blog.utils import get_data
 
 
-
-
 # Create your views here.
 # @cache_page(60)
 def index(request):
@@ -37,11 +35,11 @@ def article_details(request, aid):
     article = get_object_or_404(models.Article, id=aid)
     article.read_times += 1
     article.save()
-    pre_article = models.Article.objects.filter(id__gt=aid).first()
-    next_article = models.Article.objects.filter(id__lt=aid).order_by("-id").first()
+    pre_article = models.Article.objects.filter(id__gt=aid).values('id', 'title').first()
+    next_article = models.Article.objects.filter(id__lt=aid).order_by("-id").values('id', 'title').first()
     # 相关
     reakated_article = models.Article.objects.filter(
-        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).distinct()[:10]
+        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).distinct()[:10].values('id','title')
 
     user_ip = get_data.get_visitor_ip(request)
     context = {
@@ -79,15 +77,6 @@ def post_comment(request):
             raise Http404('为了使用本功能,请开启您浏览器的Cookie')
     else:
         return Http404()
-
-
-
-
-
-
-
-
-
 
 
 def get_tag_articcles(request, tid):
@@ -153,7 +142,6 @@ def group_list(request):
         'groups': models.ArticleGroup.objects.all()
     }
     return render(request, 'articles_group_list.html', context)
-
 
 
 def e_404(request, exception):

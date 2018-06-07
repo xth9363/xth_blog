@@ -38,7 +38,7 @@ def get_visitor_ip(req):
         try:
             result = rq.get(
                 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=%s' % ip)
-            print(result.text)
+            # print(result.text)
             j_data = json.loads(result.text)
             ip_split = ip.split('.')
             ip_split[3] = '*'
