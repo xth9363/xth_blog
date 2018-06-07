@@ -1,3 +1,8 @@
+
+{% load cache %}
+{% load my_tags %}
+
+
 <!doctype html>
 <html>
 <head>
@@ -43,6 +48,8 @@
 </head>
 <body>
 
+
+
 <header>
     {#    <script type="text/javascript" src="http://ip.chinaz.com/getip.aspx"></script>#}
     <!--menu begin-->
@@ -52,50 +59,17 @@
 
             <li><a href="{% url "blog_index" %}" id="topnav_current">网站首页</a></li>
             <li><a href="{% url "get_groups" %}" id="topnav_current">专题</a></li>
-
-
-            {% for type in side_data.article_type %}
+{% cache 600 head %}
+    {% top_data as top_d %}
+            {% for type in top_d %}
                 <li><a href="{% url 'get_type_articcles' type.id %}">{{ type.name }}</a></li>
 
             {% endfor %}
 
-            {#            <li><a href="blog/about.html">关于我</a></li>#}
-            {#            <li><a href="blog/share.html">模板分享</a>#}
-            {#                <ul class="sub-nav">#}
-            {#                    <li><a href="blog/share.html">个人博客模板</a></li>#}
-            {#                    <li><a href="blog/share.html">国外Html5模板</a></li>#}
-            {#                    <li><a href="blog/share.html">企业网站模板</a></li>#}
-            {#                </ul>#}
-            {#            </li>#}
-            {#            <li><a href="blog/list.html">学无止境</a>#}
-            {#                <ul class="sub-nav">#}
-            {#                    <li><a href="blog/list.html">心得笔记</a></li>#}
-            {#                    <li><a href="blog/list.html">CSS3|Html5</a></li>#}
-            {#                    <li><a href="blog/list.html">网站建设</a></li>#}
-            {#                    <li><a href="blog/list.html">推荐工具</a></li>#}
-            {#                    <li><a href="blog/list.html">JS实例索引</a></li>#}
-            {#                </ul>#}
-            {#            </li>#}
-            {#            <li><a href="blog/life.html">慢生活</a>#}
-            {#                <ul class="sub-nav">#}
-            {#                    <li><a href="blog/life.html">日记</a></li>#}
-            {#                    <li><a href="blog/life.html">欣赏</a></li>#}
-            {#                    <li><a href="blog/life.html">程序人生</a></li>#}
-            {#                    <li><a href="blog/life.html">经典语录</a></li>#}
-            {#                </ul>#}
-            {#            </li>#}
-            {#            <li><a href="blog/time.html">时间轴</a></li>#}
-            {#            <li><a href="blog/gbook.html">留言</a></li>#}
-            {#            <li><a href="blog/info.html">内容页</a></li>#}
-            <!--search begin-->
             <div id="search_bar" class="search_bar">
                 <form id="searchform" action="{% url 'article_search' %}" name="searchform"
                       autocomplete="off">
                     <input class="input" placeholder="请输入关键词..." type="text" name="keyboard" id="keyboard">
-                    {#                    <input type="hidden" name="keyword" id="keyword"/>#}
-                    {#                    <input type="hidden" name="tempid" value="1"/>#}
-                    {#                    <input type="hidden" name="tbname" value="news">#}
-                    {#                    <input type="hidden" name="Submit" value="搜索"/>#}
                     <span class="search_ico"></span>
                 </form>
             </div>
@@ -110,12 +84,13 @@
             <dt class="list_dt"><a href="{% url 'blog_index' %}">网站首页</a></dt>
             <dt class="list_dt"><a href="{% url "get_groups" %}">专题</a></dt>
 
-            {% for type in side_data.article_type %}
+            {% for type in top_d %}
                 <dt class="list_dt"><a href="{% url 'get_type_articcles' type.id %}">{{ type.name }}</a></dt>
 
             {% endfor %}
         </dl>
     </div>
+{% endcache %}
     <!--mnav end-->
 </header>
 {% block befor_article %}
@@ -131,11 +106,14 @@
     {% block html_content %}
 
     {% endblock %}
-    <div class="sidebar">
+{% cache 600 sidebar %}
+{% side_bar as side_b %}
+
+        <div class="sidebar">
         <div class="cloud">
             <h2 class="hometitle">标签</h2>
             <ul>
-                {% for tag in side_data.tag12 %}
+                {% for tag in side_b.tag12 %}
 
                     <a href="{% url 'get_tag_articcles' tag.id %}">{{ tag.name }}</a>
                 {% endfor %}
@@ -145,7 +123,7 @@
         <div class="tuijian">
             <h2 class="hometitle">最新专题</h2>
             <ul class="sidenews">
-                {% for group in side_data.article_group %}
+                {% for group in side_b.article_group %}
                     <li>
                         <p>
                             <a href="{% url 'get_group_articcles' group.id %}">{{ group.name|truncatechars:22 }}({{ group.article_set.all|length }})</a>
@@ -159,7 +137,7 @@
             <h2 class="hometitle">点击排行</h2>
 
             <ul class="sidenews">
-                {% for read in side_data.read5 %}
+                {% for read in side_b.read5 %}
                     <li>
                         <p><a href="{% url 'article_details' read.id %}">{{ read.title|truncatechars:22 }}</a></p>
                     <li>
@@ -170,7 +148,7 @@
             <h2 class="hometitle">最新文章</h2>
 
             <ul class="sidenews">
-                {% for new in side_data.new5 %}
+                {% for new in side_b.new5 %}
                     <li>
                         <p><a href="{% url 'article_details' new.id %}">{{ new.title|truncatechars:22 }}</a></p>
                     <li>
@@ -200,6 +178,8 @@
         {#            </ul>#}
         {#        </div>#}
     </div>
+
+{% endcache %}
 </article>
 <footer>
     {#    <p>Design by <a href="http://www.yangqq.com" target="_blank">杨青个人博客</a> <a href="/">蜀ICP备11002373号-1</a></p>#}
