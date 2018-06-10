@@ -13,11 +13,12 @@ from ckeditor.fields import RichTextField
 from blog.utils._asd import is_int
 from django.views.decorators.cache import cache_page
 from blog.utils import get_data
-
+from my_blog.settings import ADMINS,EMAIL_HOST_USER
 
 # Create your views here.
 # @cache_page(60)
 def index(request):
+
     # from django.core.mail import send_mail  # 导入django发送邮件模块
     # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
     # raise Http404('not')
@@ -42,16 +43,15 @@ def article_details(request, aid):
         Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).distinct()[:10].values('id',
                                                                                                                'title')
 
-    user_ip = request.COOKIES.get('user_ip') if 'user_ip' in request.COOKIES else False
+    visitor_data = request.session['user_ip'] if 'user_ip' in request.session else False
     context = {
         'article': article,
         'pre_article': pre_article,
         'next_article': next_article,
         'reakated_article': reakated_article,  # 相关文章
         'comments': get_data.comment_order(aid),
-        'user_ip': user_ip
+        'visitor_data': visitor_data
     }
-
     red = render(request, 'info.html', context)
     #
     # if user_ip:
@@ -63,20 +63,22 @@ def article_details(request, aid):
 def post_comment(request):
     if request.method == 'POST':
         print(request.POST)
-        if 'user_ip' in request.COOKIES:
+        if 'user_ip' in request.session:
+            user_ip=request.session['user_ip']
+            commenter="{}|{}{}{}".format(user_ip['ip'],user_ip.country,user_ip.province,user_ip.city)
             if 'parent_id' in request.POST:
-                models.Comment.objects.create(commenter=json.loads(request.COOKIES.get('user_ip')),
+                models.Comment.objects.create(commenter=commenter,
                                               article_id=int(request.POST.get('aid')),
                                               content=format(request.POST.get('content')),
                                               parent_id=int(request.POST.get('parent_id')),
                                               reply_to=request.POST.get('commenter'))
             else:
-                models.Comment.objects.create(commenter=json.loads(request.COOKIES.get('user_ip')),
+                models.Comment.objects.create(commenter=commenter,
                                               article_id=int(request.POST.get('aid')),
                                               content=request.POST.get('content'), )
             return redirect(reverse('article_details', args=[int(request.POST.get('aid')), ]))
         else:
-            raise Http404('为了使用本功能,请开启您浏览器的Cookie')
+            return HttpResponse(status=403)
     else:
         raise Http404()
 

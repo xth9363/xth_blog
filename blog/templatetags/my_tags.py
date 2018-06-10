@@ -28,6 +28,7 @@ def set_url_var(*args, **kwargs):
     # 组合改变url
     return set_var_url(url=kwargs['url'], var=kwargs['var'], value=kwargs['value'])
 
+
 @register.simple_tag
 def side_bar(*args, **kwargs):
     # 返回侧边栏数据
@@ -40,7 +41,17 @@ def side_bar(*args, **kwargs):
     }
     return side_data
 
+
 @register.simple_tag
 def top_data(*args, **kwargs):
     # 返回顶部栏数据
     return ArticleType.objects.all()
+
+
+@register.simple_tag
+def ip_safe(*args, **kwargs):
+    # 返回顶部栏数据
+    ip = kwargs['ip']
+    ip_s = ip.split('.')
+    ip_s[0] = "***"
+    return ".".join(ip_s)

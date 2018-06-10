@@ -11,6 +11,7 @@ from blog.utils import get_data
 from blog.models import Visitor
 import json
 from my_blog import settings
+from my_blog.settings import ADMINS, EMAIL_HOST_USER
 
 
 def add_visitor(visitor, url=None):
@@ -24,6 +25,7 @@ class RecordIp(MiddlewareMixin):
         pass
 
     def process_response(self, request, response):
+        visitor_data=False
         if not settings.DEBUG:
             try:
                 if 'user_ip' not in request.session:
@@ -34,13 +36,11 @@ class RecordIp(MiddlewareMixin):
                         add_visitor(visitor_data)  # 添加访客数据
                         request.session['user_ip'] = visitor_data
                     else:
-                        print("获取IP失败")
-                        # else:
-                        #     visitor_data = request.session.get('user_ip')
-                        #     add_visitor(visitor_data)  # 添加访客数据
+                        return HttpResponse(status=403)
             except Exception as e:
-                # raise HttpResponse('Sorry,您没有访问的权限', status=403)
-                print('异常')
-                print(e)
+                from django.core.mail import send_mail  # 导入django发送邮件模块
+                content = "{}:{}".format(e.args[0],json.dumps(visitor_data))
+                send_mail('添加访客信息出错', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
+                return HttpResponse(status=403)
         return response
 

@@ -9,8 +9,16 @@ import json
 import requests as rq
 from django.core.paginator import Paginator
 from blog.utils._asd import is_int
+from my_blog.settings import ADMINS, EMAIL_HOST_USER
 
 LIMIT = 6
+
+
+def ip_safe(ip):
+    # 返回顶部栏数据
+    ip_s = ip.split('.')
+    ip_s[0] = "***"
+    return ".".join(ip_s)
 
 
 def comment_order(aid):
@@ -36,6 +44,7 @@ def get_visitor_ip(req):
         ip = req.META['REMOTE_ADDR']
 
     if ip:
+        result = ""
         try:
             result = rq.get(
                 'http://ip.taobao.com/service/getIpInfo.php?ip=%s' % ip)
@@ -45,13 +54,16 @@ def get_visitor_ip(req):
             # ip_split[3] = '*'
             # ip = ".".join(ip_split)
             return {'ip': ip,
+                    'ip_save': ip_safe(ip),
                     'country': j_data['country'],
                     'province': j_data['region'],
                     'city': j_data['city'],
-                    'isp':j_data['isp']
+                    'isp': j_data['isp']
                     }
         except Exception as e:
-            print(e)
+            from django.core.mail import send_mail  # 导入django发送邮件模块
+            content = "{}:{}:{}".format(e.args[0], result.text, result.status_code)
+            send_mail('获取IP所在地出错', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
             return False
     else:
         return False
