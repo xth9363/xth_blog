@@ -123,7 +123,7 @@
                             <input type="button" value="评论原文" id="comment_no_parent" class="pull-left btn btn-default">
                             <input type="submit" value="发布" class="pull-right btn btn-default">
                             <span class="pull-right"
-                                  style="padding: 5px;">{% ip_safe ip=visitor_data.ip %}|{{ visitor_data.country }}{{ visitor_data.province }}{{ visitor_data.city }}</span>
+                                  style="padding: 5px;">{{ visitor_data.ip_save }}|{{ visitor_data.country }}{{ visitor_data.province }}{{ visitor_data.city }}</span>
                         </form>
                         <script>
                             const $content = $("#content")

@@ -13,12 +13,12 @@ from ckeditor.fields import RichTextField
 from blog.utils._asd import is_int
 from django.views.decorators.cache import cache_page
 from blog.utils import get_data
-from my_blog.settings import ADMINS,EMAIL_HOST_USER
+from my_blog.settings import ADMINS, EMAIL_HOST_USER
+
 
 # Create your views here.
 # @cache_page(60)
 def index(request):
-
     # from django.core.mail import send_mail  # 导入django发送邮件模块
     # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
     # raise Http404('not')
@@ -64,9 +64,9 @@ def post_comment(request):
     if request.method == 'POST':
         print(request.POST)
         if 'user_ip' in request.session:
-            user_ip=request.session['user_ip']
-            commenter="{}|{}{}{}".format(user_ip['ip'],user_ip.country,user_ip.province,user_ip.city)
-            if 'parent_id' in request.POST:
+            user_ip = request.session['user_ip']
+            commenter = "{}|{}{}{}".format(user_ip['ip_save'], user_ip['country'], user_ip['province'], user_ip['city'])
+            if 'parent_id' in request.POST and request.POST.get('parent_id'):
                 models.Comment.objects.create(commenter=commenter,
                                               article_id=int(request.POST.get('aid')),
                                               content=format(request.POST.get('content')),

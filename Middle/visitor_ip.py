@@ -27,6 +27,7 @@ class RecordIp(MiddlewareMixin):
     def process_response(self, request, response):
         visitor_data=False
         if not settings.DEBUG:
+        # if True:
             try:
                 if 'user_ip' not in request.session:
                     visitor_data = get_data.get_visitor_ip(request)
