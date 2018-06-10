@@ -68,7 +68,8 @@ class ArticleAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         """  重新定义此函数，限制普通用户所能修改的字段  """
         if request.user.is_superuser:
-            self.readonly_fields = ['title', 'content']
+            self.readonly_fields = []
+            # self.readonly_fields = ['title', 'content']
         # elif hasattr(obj, 'is_sure'): # 用来判断如是否已经审批等状态
         #     if obj.is_sure:
         #         self.readonly_fields = ('project_name', 'to_mail', 'data_selected', 'frequency', 'start_date',

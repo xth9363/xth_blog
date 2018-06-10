@@ -203,6 +203,6 @@ class Visitor(models.Model):
     location = models.CharField(max_length=64, verbose_name='访问者所在地', null=True, blank=True)
 
     def __str__(self):
-        return "{}:{}:{}".format(self.id, self.ip, self.url)
+        return "{}|{}|{}".format(self.id, self.ip, self.location)
 
 
