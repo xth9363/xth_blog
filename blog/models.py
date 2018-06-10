@@ -34,9 +34,10 @@ class UserProfileManager(BaseUserManager):
             name=name,
         )
 
-        user.set_password(password)
         self.is_active = True
-        user.save(using=self._db)
+
+        user.set_password(password)  # 检测密码合理性
+        user.save(using=self._db)  # 保存密码
         return user
 
     def create_superuser(self, email, name, password):
@@ -50,7 +51,7 @@ class UserProfileManager(BaseUserManager):
             name=name,
         )
         user.is_active = True
-        user.is_admin = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
 
@@ -63,18 +64,18 @@ class UserProfile(AbstractBaseUser):
         verbose_name_plural = '用户'
 
     email = models.EmailField(
-        verbose_name='email address',
+        verbose_name='邮箱',
         max_length=255,
         unique=True,
         null=True,
-        help_text=mark_safe('''<a href='password/'>修改密码</a>''')
+        # help_text=mark_safe('''<a href='password/'>修改密码</a>''')
     )
-    password = models.CharField(_('password'), max_length=128, )
+    # password = models.CharField(_('password'), max_length=128, )
     name = models.CharField(max_length=32)
     is_active = models.BooleanField(default=True)
 
-    is_admin = models.BooleanField(default=False)
     # is_superuser = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     add_date = models.DateTimeField(auto_now_add=True)
     # 固定这写法
@@ -108,7 +109,7 @@ class UserProfile(AbstractBaseUser):
     def is_staff(self):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
-        return self.is_admin
+        return self.is_superuser
 
 
 class ArticleTag(models.Model):
@@ -195,5 +196,13 @@ class Visitor(models.Model):
         verbose_name = '访问者'
         verbose_name_plural = '访问者'
 
-    ip = models.GenericIPAddressField()
-    url = models.URLField()
+    ip = models.GenericIPAddressField(verbose_name='访问者Ip')
+    url = models.TextField(verbose_name='访问地址',null=True,blank=True)
+    user = models.ForeignKey(UserProfile, null=True, blank=True, verbose_name='用户', on_delete=models.CASCADE)
+    visit_date = models.DateTimeField(auto_now_add=True, verbose_name='访问时间')
+    location = models.CharField(max_length=64, verbose_name='访问者所在地', null=True, blank=True)
+
+    def __str__(self):
+        return "{}:{}:{}".format(self.id, self.ip, self.url)
+
+

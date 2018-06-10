@@ -11,6 +11,8 @@ from django.core.paginator import Paginator
 from blog.utils._asd import is_int
 
 LIMIT = 6
+
+
 def comment_order(aid):
     all_comments = models.Comment.objects.filter(article_id=aid).order_by('add_date')
     comment_list_dict = {}
@@ -26,7 +28,6 @@ def comment_order(aid):
     # return []
 
 
-
 def get_visitor_ip(req):
     ip = False
     if 'HTTP_X_FORWARDED_FOR' in req.META:
@@ -37,24 +38,31 @@ def get_visitor_ip(req):
     if ip:
         try:
             result = rq.get(
-                'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip=%s' % ip)
+                'http://ip.taobao.com/service/getIpInfo.php?ip=%s' % ip)
             # print(result.text)
-            j_data = json.loads(result.text)
-            ip_split = ip.split('.')
-            ip_split[3] = '*'
-            ip = ".".join(ip_split)
-            return '[{}][{}:{}:{}]'.format(ip, j_data['country'], j_data['province'], j_data['city'])
+            j_data = json.loads(result.text)['data']
+            # ip_split = ip.split('.')
+            # ip_split[3] = '*'
+            # ip = ".".join(ip_split)
+            return {'ip': ip,
+                    'country': j_data['country'],
+                    'province': j_data['region'],
+                    'city': j_data['city'],
+                    'isp':j_data['isp']
+                    }
         except Exception as e:
             print(e)
             return False
     else:
         return False
 
+
 def page_limit(rq, datas):
     p = Paginator(datas, LIMIT)
     page = int(rq.GET.get('page')) if 'page' in rq.GET and is_int(rq.GET.get('page')) and 0 < int(
         rq.GET.get('page')) <= p.num_pages  else 1
     return {'page': page, 'num': p.num_pages, 'count': p.count}, p.page(page if page > 0 and page <= p.num_pages else 1)
+
 
 def order_limit(rq):
     if 'o' in rq.GET:

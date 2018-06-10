@@ -35,13 +35,14 @@ def article_details(request, aid):
     article = get_object_or_404(models.Article, id=aid)
     article.read_times += 1
     article.save()
-    pre_article = models.Article.objects.filter(id__gt=aid).values('id', 'title').first()
-    next_article = models.Article.objects.filter(id__lt=aid).order_by("-id").values('id', 'title').first()
+    pre_article = models.Article.objects.filter(id__lt=aid).order_by("-id").values('id', 'title').first()
+    next_article = models.Article.objects.filter(id__gt=aid).values('id', 'title').first()
     # 相关
     reakated_article = models.Article.objects.filter(
-        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).distinct()[:10].values('id','title')
+        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).distinct()[:10].values('id',
+                                                                                                               'title')
 
-    user_ip = get_data.get_visitor_ip(request)
+    user_ip = request.COOKIES.get('user_ip') if 'user_ip' in request.COOKIES else False
     context = {
         'article': article,
         'pre_article': pre_article,
@@ -50,11 +51,12 @@ def article_details(request, aid):
         'comments': get_data.comment_order(aid),
         'user_ip': user_ip
     }
-    red = render(request, 'info.html', context)
 
-    if user_ip:
-        red.set_cookie('user_ip', json.dumps(user_ip))  # 'NoneType' object has no attribute 'split' 不能直接用中文
-        context['user_ip'] = user_ip
+    red = render(request, 'info.html', context)
+    #
+    # if user_ip:
+    #     red.set_cookie('user_ip', json.dumps(user_ip))  # 'NoneType' object has no attribute 'split' 不能直接用中文
+    #     context['user_ip'] = user_ip
     return red
 
 
@@ -62,7 +64,7 @@ def post_comment(request):
     if request.method == 'POST':
         print(request.POST)
         if 'user_ip' in request.COOKIES:
-            if 'parent_id' in request.POST and request.POST.get('parent_id'):
+            if 'parent_id' in request.POST:
                 models.Comment.objects.create(commenter=json.loads(request.COOKIES.get('user_ip')),
                                               article_id=int(request.POST.get('aid')),
                                               content=format(request.POST.get('content')),
@@ -76,7 +78,7 @@ def post_comment(request):
         else:
             raise Http404('为了使用本功能,请开启您浏览器的Cookie')
     else:
-        return Http404()
+        raise Http404()
 
 
 def get_tag_articcles(request, tid):
