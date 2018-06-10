@@ -10,6 +10,7 @@ from django.utils.deprecation import MiddlewareMixin
 from blog.utils import get_data
 from blog.models import Visitor
 import json
+from my_blog import settings
 
 
 def add_visitor(visitor, url=None):
@@ -23,31 +24,23 @@ class RecordIp(MiddlewareMixin):
         pass
 
     def process_response(self, request, response):
-        try:
-            if 'user_ip' not in request.session:
-                visitor_data = get_data.get_visitor_ip(request)
-                if visitor_data:
-                    print(visitor_data)
-                    # try:
-                    add_visitor(visitor_data)  # 添加访客数据
-                    request.session['user_ip'] = visitor_data
-                else:
-                    print("获取IP失败")
-            # else:
-            #     visitor_data = request.session.get('user_ip')
-            #     add_visitor(visitor_data)  # 添加访客数据
-        except Exception as e:
-            # raise HttpResponse('Sorry,您没有访问的权限', status=403)
-            print('异常')
-            print(e)
+        if not settings.DEBUG:
+            try:
+                if 'user_ip' not in request.session:
+                    visitor_data = get_data.get_visitor_ip(request)
+                    if visitor_data:
+                        print(visitor_data)
+                        # try:
+                        add_visitor(visitor_data)  # 添加访客数据
+                        request.session['user_ip'] = visitor_data
+                    else:
+                        print("获取IP失败")
+                        # else:
+                        #     visitor_data = request.session.get('user_ip')
+                        #     add_visitor(visitor_data)  # 添加访客数据
+            except Exception as e:
+                # raise HttpResponse('Sorry,您没有访问的权限', status=403)
+                print('异常')
+                print(e)
         return response
 
-    @staticmethod
-    def unknow_visitor(req):
-        ip = ''
-        if 'HTTP_X_FORWARDED_FOR' in req.META:
-            ip = req.META['HTTP_X_FORWARDED_FOR']
-        elif 'REMOTE_ADDR' in req.META:
-            ip = req.META['REMOTE_ADDR']
-
-        Visitor.objects.create(ip=ip, url=req.get_full_path(), location='')
