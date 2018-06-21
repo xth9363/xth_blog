@@ -5,6 +5,7 @@ from blog import models
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.db.models.aggregates import Count
+from django.db import connection
 from django.db.models import Q
 import requests as rq
 import json
@@ -23,13 +24,12 @@ def index(request):
     # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
     # raise Http404('not')
     articles = models.Article.objects.filter().order_by('-add_date')[:10]
-
     # print(articles.query.__str__())
     context = {
         'articles': articles,
     }
     # print(context)
-    return render(request, 'index.html', context)
+    return render(request, 'blog/index.html', context)
 
 
 def article_details(request, aid):
@@ -52,7 +52,7 @@ def article_details(request, aid):
         'comments': get_data.comment_order(aid),
         'visitor_data': visitor_data
     }
-    red = render(request, 'info.html', context)
+    red = render(request, 'blog/info.html', context)
     #
     # if user_ip:
     #     red.set_cookie('user_ip', json.dumps(user_ip))  # 'NoneType' object has no attribute 'split' 不能直接用中文
@@ -99,7 +99,7 @@ def get_tag_articcles(request, tid):
 
     print(dir(request))
     print(request.get_full_path())
-    return render(request, 'articles_list.html', context)
+    return render(request, 'blog/articles_list.html', context)
 
 
 def get_type_articcles(request, tid):
@@ -111,7 +111,7 @@ def get_type_articcles(request, tid):
         'pages': pages
 
     }
-    return render(request, 'articles_list.html', context)
+    return render(request, 'blog/articles_list.html', context)
 
 
 def get_group_articcles(request, gid):
@@ -123,7 +123,7 @@ def get_group_articcles(request, gid):
         'pages': pages
 
     }
-    return render(request, 'articles_list.html', context)
+    return render(request, 'blog/articles_list.html', context)
 
 
 def article_search(request):
@@ -141,7 +141,7 @@ def article_search(request):
             'pages': pages
 
         }
-        return render(request, 'articles_list.html', context)
+        return render(request, 'blog/articles_list.html', context)
     else:
         raise Http404("请带上关键字")
 
@@ -150,23 +150,45 @@ def group_list(request):
     context = {
         'groups': models.ArticleGroup.objects.all()
     }
-    return render(request, 'articles_group_list.html', context)
+    return render(request, 'blog/articles_group_list.html', context)
+
+
+def my_blog_list(request):
+    import datetime
+    import calendar
+    now = datetime.datetime.now()
+    visitors=models.Visitor.objects.filter(visit_date__year=now.year,visit_date__month=now.month)
+    visitors_num=visitors.count()
+    week, day_num = calendar.monthrange(now.year, now.month)
+    visitors = visitors.extra(select={'day': 'extract( day from visit_date )'}).values('day').annotate(
+        dcount=Count('visit_date'))
+    visitor_dict = {}
+    for i in range(1, day_num + 1):
+        visitor_dict[i] = 0
+    for each in visitors:
+        visitor_dict[each['day']] = each['dcount']
+    context = {
+        'visitor_dict': visitor_dict,
+        'visitors_num': visitors_num,
+    }
+    # return render(request, 'blog/blog_visitor.html', context)
+    return render(request, 'blog/show_visitor_data.html', context)
 
 
 def e_404(request, exception):
-    return render(request, '404.html', {})
+    return render(request, 'blog/404.html', {})
 
 
 def e_500(request):  # 这里一个坑
-    return render(request, '500.html', {})
+    return render(request, 'blog/500.html', {})
 
 
 def e_502(request):
-    return render(request, '502.html', {})
+    return render(request, 'blog/502.html', {})
 
 
 def e_403(request):
-    return render(request, '403.html', {})
+    return render(request, 'blog/403.html', {})
 
 
 def raise_error(request, code):
@@ -177,6 +199,6 @@ def raise_error(request, code):
         response.status_code = int(code)
         return response
     else:
-        response = render_to_response('404.html', {})
+        response = render_to_response('blog/404.html', {})
         response.status_code = 404
         return response

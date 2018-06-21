@@ -1,0 +1,236 @@
+{% load cache %}
+{% load my_tags %}
+{% load staticfiles %}
+
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>夏天浩 博客</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+
+    <meta name="keywords" content="夏天浩  博客 博客"/>
+    <meta name="description" content="夏天浩  博客 --个人博客"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/base.css" rel="stylesheet">
+    <link href="/static/css/myRewards.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+    <link href="/static/css/m.css" rel="stylesheet">
+    <link href="/static/css/prettify.css" rel="stylesheet">
+    <script src="{% static 'asstes/plugins/echarts.min.js' %}"></script>
+
+    <script src="/static/js/jquery.min.js" type="text/javascript"></script>
+    <script src="/static/js/popper.js" type="text/javascript"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/jquery.easyfader.min.js"></script>
+    <script src="/static/js/conn.js"></script>
+    <script src="/static/js/nav.js"></script>
+    <script src="/static/js/myscript.js"></script>
+    <script src="/static/js/scrollReveal.js"></script>
+    <script src="/static/js/prettify.js"></script>
+
+
+    <script src="/static/js/my_js.js"></script>
+
+    <script>
+        $(window).load(function () {
+            $("pre").addClass("prettyprint");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
+            $("pre").addClass("linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
+            prettyPrint();//代替body上的onload事件加载该方法
+        })
+    </script>
+
+    <!--[if lt IE 9]>
+<script src="/static/js/modernizr.js"></script>
+<![endif]-->
+</head>
+<body>
+
+
+<header>
+    {#    <script type="text/javascript" src="http://ip.chinaz.com/getip.aspx"></script>#}
+    <!--menu begin-->
+    <div class="menu">
+        <nav class="nav" id="topnav">
+            <h1 class="logo"><a href="{% url 'blog_index' %}">夏天浩 博客</a></h1>
+
+            <li><a href="{% url "blog_index" %}" id="topnav_current">网站首页</a></li>
+            <li><a href="{% url "get_groups" %}" id="topnav_current">专题</a></li>
+            {% cache 600 head %}
+                {% top_data as top_d %}
+                {% for type in top_d %}
+                    <li><a href="{% url 'get_type_articcles' type.id %}">{{ type.name }}</a></li>
+
+                {% endfor %}
+            {% endcache %}
+
+            </li>
+
+            <div id="search_bar" class="search_bar">
+                <form id="searchform" action="{% url 'article_search' %}" name="searchform"
+                      autocomplete="off">
+                    <input class="input" placeholder="请输入关键词..." type="text" name="keyboard" id="keyboard">
+                    <span class="search_ico"></span>
+                </form>
+            </div>
+            <!--search end-->
+        </nav>
+    </div>
+    <!--menu end-->
+    <!--mnav begin-->
+    <div id="mnav">
+        <h2><a href="{% url 'blog_index' %}" class="mlogo">夏天浩博客</a><span class="navicon"></span></h2>
+        <dl class="list_dl">
+            <dt class="list_dt"><a href="{% url 'blog_index' %}">网站首页</a></dt>
+            <dt class="list_dt"><a href="{% url "get_groups" %}">专题</a></dt>
+
+            {% for type in top_d %}
+                <dt class="list_dt"><a href="{% url 'get_type_articcles' type.id %}">{{ type.name }}</a>
+                </dt>
+
+            {% endfor %}
+        </dl>
+    </div>
+
+    <!--mnav end-->
+</header>
+{% block befor_article %}
+{% endblock %}
+<article>
+    <h1 class="t_nav">
+
+        {% block t_nav %}
+
+
+        {% endblock %}
+    </h1>
+    {% block html_content %}
+
+    {% endblock %}
+    {% cache 600 sidebar %}
+        {% side_bar as side_b %}
+
+        <div class="sidebar">
+            <div class="cloud">
+                <h2 class="hometitle">标签</h2>
+                <ul>
+                    {% for tag in side_b.tag12 %}
+
+                        <a href="{% url 'get_tag_articcles' tag.id %}">{{ tag.name }}</a>
+                    {% endfor %}
+
+                </ul>
+            </div>
+            <div class="tuijian">
+                <h2 class="hometitle">最新专题</h2>
+                <ul class="sidenews">
+                    {% for group in side_b.article_group %}
+                        <li>
+                            <p>
+                                <a href="{% url 'get_group_articcles' group.id %}">{{ group.name|truncatechars:30 }}({{ group.article_set.all|length }})</a>
+                            </p>
+
+                        <li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="tuijian">
+                <h2 class="hometitle">点击排行</h2>
+
+                <ul class="sidenews">
+                    {% for read in side_b.read5 %}
+                        <li>
+                            <p><a href="{% url 'article_details' read.id %}">{{ read.title|truncatechars:30 }}</a></p>
+                        <li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="tuijian">
+                <h2 class="hometitle">最新文章</h2>
+
+                <ul class="sidenews">
+                    {% for new in side_b.new5 %}
+                        <li>
+                            <p><a href="{% url 'article_details' new.id %}">{{ new.title|truncatechars:30 }}</a></p>
+                        <li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+
+            {#        <div class="links">#}
+            {#            <h2 class="hometitle">友情链接</h2>#}
+            {#            <ul>#}
+            {#                <li><a href="http://www.yangqq.com" target="_blank">博客</a></li>#}
+            {#                <li><a href="http://www.yangqq.com" target="_blank">D设计师博客</a></li>#}
+            {#                <li><a href="http://www.yangqq.com" target="_blank">优秀个人博客</a></li>#}
+            {#            </ul>#}
+            {#        </div>#}
+            {#        <div class="guanzhu" id="float">#}
+            {#            <h2 class="hometitle">关注我们 么么哒！</h2>#}
+            {#            <ul>#}
+            {#                <li class="sina"><a href="/" target="_blank"><span>新浪微博</span>杨青博客</a></li>#}
+            {#                <li class="tencent"><a href="/" target="_blank"><span>腾讯微博</span>杨青博客</a></li>#}
+            {#                <li class="qq"><a href="/" target="_blank"><span>QQ号</span>476847113</a></li>#}
+            {#                <li class="email"><a href="/" target="_blank"><span>邮箱帐号</span>dancesmiling@qq.com</a></li>#}
+            {#                <li class="wxgzh"><a href="/" target="_blank"><span>微信号</span>yangqq_1987</a></li>#}
+            {#                <li class="wx"><img src="/static/images/wx.jpg"></li>#}
+            {#            </ul>#}
+            {#        </div>#}
+        </div>
+
+    {% endcache %}
+</article>
+<footer>
+    {#    <p>Design by <a href="http://www.yangqq.com" target="_blank">杨青个人博客</a> <a href="/">蜀ICP备11002373号-1</a></p>#}
+</footer>
+<a href="#" class="cd-top">Top</a>
+
+
+<script>
+    window.tctipConfig = {
+        //最上面的文字
+        headText: "夏天浩 博客",
+        //侧边栏文本
+        siderText: "公告&联系我",
+        //侧边栏文本高度调整
+        siderTextTop: "-80px",
+        //侧边栏背景颜色
+        siderBgcolor: "#323d45",
+        //整个侧边栏的高度设置可以px，em，或百分比
+        siderTop: "120px",
+        //底部文字
+        buttomText: "本栏的技术支持",
+        //底部文字链接
+        buttomLink: "https://github.com/haddyyang/tctip",
+
+        //显示项
+        list: {
+            notice: {icon: "/static/images/icon/tip.png", name: "公告栏", className: "myR-on", text: '暂无公告'},
+            my_wechar: {
+                icon: "/static/images/icon/weixin.png",
+                name: "我的微信",
+                desc: "我的微信",
+                qrimg: "/static/images/my_wechat.png"
+            },
+            my_qq: {
+                icon: "/static/images/icon/qq_icon.png",
+                name: "我的QQ",
+                desc: "我的QQ",
+                qrimg: "/static/images/my_qq.png"
+            },
+            // my_qq: {icon: "/static/images/icon/qq_icon.png", name:"我的QQ", desc: "我的QQ", text: "<a href=\"http://wpa.qq.com/msgrd?v=3&uin=348396038&site=qq&menu=yes\">348396038</a>"}
+        }
+    };
+</script>
+
+<script src="/static/js/tctip.min.js"></script>
+
+</body>
+
+<script>
+
+</script>
+</html>

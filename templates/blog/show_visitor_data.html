@@ -1,0 +1,56 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% block css %}
+    <script src="{% static 'asstes/plugins/echarts.min.js' %}"></script>
+
+
+{% endblock %}
+
+
+{% block html_content %}
+                            <div id="barChart" style="width: 100%;height:750px;"></div>
+
+    <script>
+            $(function () {
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('barChart'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                color: ['#3398DB'],
+                title: {
+                    text: '本月访问人数:{{ visitors_num }}'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['']
+                },
+                xAxis: {
+                    {#                    data: ["在线", "下线", "故障", "备用", "未知"]#}
+                    data: [{% for day in visitor_dict %}
+                        "{{ day }}",
+                    {% endfor %}]
+                },
+                yAxis: {},
+                series:
+                    [{
+                        name: '访问人数',
+{#                        type: 'bar',#}
+                        type: 'line',
+                        barWidth: '50%',
+                        {#                        data: [{{ upline }}, {{ offline }}, {{ breakdown }}, {{ backup }}, {{ unknown }}]#}
+                        data: [{% for day,count in  visitor_dict.items %}
+                            {{ count }},
+                        {% endfor %}]
+                    }]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        });
+
+    </script>
+{% endblock %}
+
+{% block sidbar %}
+
+{% endblock %}

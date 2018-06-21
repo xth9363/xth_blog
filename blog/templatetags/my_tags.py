@@ -13,8 +13,9 @@ from django.db.models.aggregates import Count
 register = template.Library()
 
 
-@register.filter('range')
-def range(value):
+@register.filter('range1')
+def range1(value):
+    print(value)
     return range(1, value + 1)
 
 

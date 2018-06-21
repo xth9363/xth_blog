@@ -2,7 +2,6 @@ from django.contrib import admin
 from blog import models
 from django.utils.html import format_html
 
-
 # def copy_one(self, request, queryset):
 #     # 定义actions函数
 #     # 判断用户选择了几条数据，如果是一条以上，则报错
@@ -43,7 +42,6 @@ class ArticleAdmin(admin.ModelAdmin):
             tags += each.name + "/"
         return format_html("%s" % tags)
 
-
     def copy_one(self, request, queryset):
         # 定义actions函数
         # 判断用户选择了几条数据，如果是一条以上，则报错
@@ -78,8 +76,6 @@ class ArticleAdmin(admin.ModelAdmin):
         #     self.readonly_fields = ('paper_num', 'is_sure', 'proposer', 'sql', 'commit_date')
 
         return self.readonly_fields
-
-
 
     def save_model(self, request, obj, form, change):
         # 数据保存时进行一些额外的操作（通过重写ModelAdmin的save_model实现）
