@@ -18,6 +18,7 @@ urlpatterns = [
     path('post_comment/', views.post_comment, name="post_comment"),
     path('raise_error/<int:code>', views.raise_error, name="raise_error"),
     path('my_blog_list', views.my_blog_list, name="my_blog_list"),
+    # path('daily_mail', views.daily_mail, name="daily_mail"),
 ]
 
 # handler404 = views.page_not_found

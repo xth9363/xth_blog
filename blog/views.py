@@ -19,6 +19,7 @@ from my_blog.settings import ADMINS, EMAIL_HOST_USER
 
 # Create your views here.
 # @cache_page(60)
+# 首页
 def index(request):
     # from django.core.mail import send_mail  # 导入django发送邮件模块
     # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
@@ -32,6 +33,7 @@ def index(request):
     return render(request, 'blog/index.html', context)
 
 
+# 文章详情
 def article_details(request, aid):
     article = get_object_or_404(models.Article, id=aid)
     article.read_times += 1
@@ -60,6 +62,7 @@ def article_details(request, aid):
     return red
 
 
+# 提交评论
 def post_comment(request):
     if request.method == 'POST':
         print(request.POST)
@@ -88,6 +91,7 @@ def post_comment(request):
         raise Http404()
 
 
+# 根据tag获取文章
 def get_tag_articcles(request, tid):
     tag = get_object_or_404(models.ArticleTag, id=tid)
     pages, articles = get_data.page_limit(request, tag.articles.all().order_by(get_data.order_limit(request)))
@@ -102,6 +106,7 @@ def get_tag_articcles(request, tid):
     return render(request, 'blog/articles_list.html', context)
 
 
+# 根据文章类型获取文章
 def get_type_articcles(request, tid):
     type = get_object_or_404(models.ArticleType, id=tid)
     pages, articles = get_data.page_limit(request, type.article_set.all().order_by(get_data.order_limit(request)))
@@ -114,6 +119,7 @@ def get_type_articcles(request, tid):
     return render(request, 'blog/articles_list.html', context)
 
 
+# 根据所属组获取文章
 def get_group_articcles(request, gid):
     group = get_object_or_404(models.ArticleGroup, id=gid)
     pages, articles = get_data.page_limit(request, group.article_set.all().order_by(get_data.order_limit(request)))
@@ -126,6 +132,7 @@ def get_group_articcles(request, gid):
     return render(request, 'blog/articles_list.html', context)
 
 
+# 文章搜索
 def article_search(request):
     print(request.get_full_path())
     print(request.path)
@@ -146,6 +153,7 @@ def article_search(request):
         raise Http404("请带上关键字")
 
 
+# 分组
 def group_list(request):
     context = {
         'groups': models.ArticleGroup.objects.all()
@@ -153,30 +161,69 @@ def group_list(request):
     return render(request, 'blog/articles_group_list.html', context)
 
 
+# 查看月访问量
 def my_blog_list(request):
     import datetime
     import calendar
     now = datetime.datetime.now()
-    visitors=models.Visitor.objects.filter(visit_date__year=now.year,visit_date__month=now.month)
-    visitors_num=visitors.count()
+    month = now.month
+    visitors = models.Visitor.objects.filter(visit_date__year=now.year, visit_date__month=now.month)
+    # 本月总访问量
+    visitors_num = visitors.count()
+    # 返回本月的
     week, day_num = calendar.monthrange(now.year, now.month)
+    # 这里是关键,先用extract拼接获得访问时间的具体日期中的day,然后分组,计数添加一个名为dcount的变量存储每日的访客数量
     visitors = visitors.extra(select={'day': 'extract( day from visit_date )'}).values('day').annotate(
         dcount=Count('visit_date'))
-    visitor_dict = {}
-    for i in range(1, day_num + 1):
-        visitor_dict[i] = 0
+    # 排好序并填好数据的字典,先全部设为0
+    visitor_dict = {i: 0 for i in range(1, day_num + 1)}
+    # for i in range(1, day_num + 1):
+    #     visitor_dict[i] = 0
     for each in visitors:
         visitor_dict[each['day']] = each['dcount']
     context = {
         'visitor_dict': visitor_dict,
         'visitors_num': visitors_num,
+        'month': month,
     }
-    # return render(request, 'blog/blog_visitor.html', context)
     return render(request, 'blog/show_visitor_data.html', context)
 
 
+# 错误处理页面
 def e_404(request, exception):
     return render(request, 'blog/404.html', {})
+
+
+# 每日邮件通知
+@login_required
+# def daily_mail(request):
+#     from .tasks import add
+#     import datetime
+#     now = datetime.datetime.now()
+#     # 本月访问量
+#     visitor_month = models.Visitor.objects.filter(visit_date__year=now.year, visit_date__month=now.month).count()
+#     # 今日访问量
+#     visitor_day = models.Visitor.objects.filter(visit_date__year=now.year, visit_date__month=now.month,
+#                                                 visit_date__day=now.day).count()
+#     # 今日评论数
+#     comment_day = models.Comment.objects.filter(add_date__year=now.year, add_date__month=now.month,
+#                                                 add_date__day=now.day).count()
+#     print(visitor_month)
+#     print(visitor_day)
+#     print(comment_day)
+#
+#     res = add.delay(5, 1)
+#     import time
+#     print(res)
+#
+#     time.sleep(10)
+#     from celery.result import AsyncResult
+#     result = AsyncResult(res.task_id)
+#     print(result)
+#     print(result.ready())
+#     print(dir(result))
+#     return HttpResponse(result)
+
 
 
 def e_500(request):  # 这里一个坑

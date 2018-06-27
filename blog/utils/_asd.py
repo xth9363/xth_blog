@@ -11,6 +11,19 @@ from django.forms.models import model_to_dict
 import re
 
 
+def dir_and_files(path):
+    import os
+    try:
+        for root, dirs, files in os.walk(path):
+            print("\033[1;31m-" * 8, "directory", "<%s>\033[0m" % root, "-" * 10)
+            for directory in dirs:
+                print("\033[1;34m<DIR>    %s\033[0m" % directory)
+            for file in files:
+                print("\t\t%s" % file)
+    except OSError as ex:
+        print(ex)
+
+
 def get_dir(var):
     '''
     返回某个对象可以调用的所有属性名和对应的属性值

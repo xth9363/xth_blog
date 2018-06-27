@@ -55,19 +55,20 @@
 <header>
     {#    <script type="text/javascript" src="http://ip.chinaz.com/getip.aspx"></script>#}
     <!--menu begin-->
+{% cache 600 head %}
     <div class="menu">
         <nav class="nav" id="topnav">
             <h1 class="logo"><a href="{% url 'blog_index' %}">夏天浩 博客</a></h1>
 
             <li><a href="{% url "blog_index" %}" id="">网站首页</a></li>
             <li><a href="{% url "get_groups" %}" id="">专题</a></li>
-            {% cache 600 head %}
+
                 {% top_data as top_d %}
                 {% for type in top_d %}
                     <li><a href="{% url 'get_type_articcles' type.id %}">{{ type.name }}</a></li>
 
                 {% endfor %}
-            {% endcache %}
+
 
             <li><a href="{% url "my_blog_list" %}" id="">访问统计</a></li>
 
@@ -92,11 +93,10 @@
             {% for type in top_d %}
                 <dt class="list_dt"><a href="{% url 'get_type_articcles' type.id %}">{{ type.name }}</a>
                 </dt>
-
             {% endfor %}
         </dl>
     </div>
-
+{% endcache %}
     <!--mnav end-->
 </header>
 {% block befor_article %}
