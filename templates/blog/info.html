@@ -38,7 +38,8 @@
                 </ul>
             </div>
             {#      <div class="news_about"><strong>简介</strong>个人博客，用来做什么？我刚开始就把它当做一个我吐槽心情的地方，也就相当于一个网络记事本，写上一些关于自己生活工作中的小情小事，也会放上一些照片，音乐。每天工作回家后就能访问自己的网站，一边听着音乐，一边写写文章。</div>#}
-            <div class="news_con">{{ article.content|safe }}</div>
+            <div class="news_con" style="min-height: 500px;">{{ article.content|safe }}</div>
+
         </div>
 
         <div class="nextinfo">
@@ -123,7 +124,9 @@
                             <input type="button" value="评论原文" id="comment_no_parent" class="pull-left btn btn-default">
                             <input type="submit" value="发布" class="pull-right btn btn-default">
                             <span class="pull-right"
-                                  style="padding: 5px;">{{ visitor_data.ip_save }}|{{ visitor_data.country }}{{ visitor_data.province }}{{ visitor_data.city }}</span>
+                                  style="padding: 5px;">{{ visitor_data.ip_save }}
+{#                                |{{ visitor_data.country }}{{ visitor_data.province }}{{ visitor_data.city }}#}
+                            </span>
                         </form>
                         <script>
                             const $content = $("#content")

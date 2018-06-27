@@ -30,6 +30,7 @@ def index(request):
         'articles': articles,
     }
     # print(context)
+
     return render(request, 'blog/index.html', context)
 
 
@@ -42,11 +43,13 @@ def article_details(request, aid):
     next_article = models.Article.objects.filter(id__gt=aid).values('id', 'title').first()
     # 相关
     reakated_article = models.Article.objects.filter(
-        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).exclude(type_id=3).distinct().order_by('?')[
+        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).exclude(
+        type_id=3).distinct().order_by('?')[
                        :10].values('id',
                                    'title')
 
     visitor_data = request.session['user_ip'] if 'user_ip' in request.session else False
+    print(visitor_data)
     context = {
         'article': article,
         'pre_article': pre_article,
@@ -69,7 +72,11 @@ def post_comment(request):
         print(request.POST)
         if 'user_ip' in request.session:
             user_ip = request.session['user_ip']
-            commenter = "{}|{}{}{}".format(user_ip['ip_save'], user_ip['country'], user_ip['province'], user_ip['city'])
+            # commenter = "{}|{}{}{}".format(user_ip['ip_save'],
+            #                                user_ip['country'],
+            #                                user_ip['province'],
+            #                                user_ip['city'])
+            commenter = "{}".format(user_ip['ip_save'])
             aid = int(request.POST.get('aid'))
             if 'parent_id' in request.POST and request.POST.get('parent_id'):
                 models.Comment.objects.create(commenter=commenter,
@@ -82,9 +89,9 @@ def post_comment(request):
                                               article_id=int(request.POST.get('aid')),
                                               content=request.POST.get('content'), )
             article = get_object_or_404(models.Article, id=aid)
-            content = "{}|{}:{}".format(article.title, commenter, request.POST.get('content'))
-            from django.core.mail import send_mail  # 导入django发送邮件模块
-            send_mail('新的评论', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
+            # content = "{}|{}:{}".format(article.title, commenter, request.POST.get('content'))
+            # from django.core.mail import send_mail  # 导入django发送邮件模块
+            # send_mail('新的评论', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
             return redirect(reverse('article_details', args=[int(request.POST.get('aid')), ]))
         else:
             return HttpResponse(status=403)

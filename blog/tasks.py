@@ -35,6 +35,7 @@ def daily_mail():
               fail_silently=False)
 
 
+
 @shared_task
 def add(x, y):
     return x + y

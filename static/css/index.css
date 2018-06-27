@@ -1095,7 +1095,8 @@ h1.t_nav {
 }
 
 .newsview {
-    padding: 0 30px
+    padding: 0 30px;
+    border-bottom: 2px solid black;
 }
 
 .intitle {
