@@ -24,7 +24,7 @@ def index(request):
     # from django.core.mail import send_mail  # 导入django发送邮件模块
     # send_mail('subject', 'message', 'xth4065@163.com', ['xth9363@163.com'], fail_silently=False)
     # raise Http404('not')
-    articles = models.Article.objects.filter().order_by('-add_date')[:10]
+    articles = models.Article.objects.exclude(type_id=3).order_by('-add_date')[:10]
     # print(articles.query.__str__())
     context = {
         'articles': articles,
@@ -194,35 +194,6 @@ def e_404(request, exception):
     return render(request, 'blog/404.html', {})
 
 
-# 每日邮件通知
-@login_required
-# def daily_mail(request):
-#     from .tasks import add
-#     import datetime
-#     now = datetime.datetime.now()
-#     # 本月访问量
-#     visitor_month = models.Visitor.objects.filter(visit_date__year=now.year, visit_date__month=now.month).count()
-#     # 今日访问量
-#     visitor_day = models.Visitor.objects.filter(visit_date__year=now.year, visit_date__month=now.month,
-#                                                 visit_date__day=now.day).count()
-#     # 今日评论数
-#     comment_day = models.Comment.objects.filter(add_date__year=now.year, add_date__month=now.month,
-#                                                 add_date__day=now.day).count()
-#     print(visitor_month)
-#     print(visitor_day)
-#     print(comment_day)
-#
-#     res = add.delay(5, 1)
-#     import time
-#     print(res)
-#
-#     time.sleep(10)
-#     from celery.result import AsyncResult
-#     result = AsyncResult(res.task_id)
-#     print(result)
-#     print(result.ready())
-#     print(dir(result))
-#     return HttpResponse(result)
 
 
 
