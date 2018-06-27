@@ -38,13 +38,14 @@ class RecordIp(MiddlewareMixin):
                     if visitor_data:
                         add_visitor(visitor_data)  # 添加访客数据
                         request.session['user_ip'] = visitor_data
-                    else:
-                        return HttpResponse(status=403)
+                    # else:
+                    #     return HttpResponse(status=403)
             except Exception as e:
-                from django.core.mail import send_mail  # 导入django发送邮件模块
-                content = "{}:{}".format(e.args[0], json.dumps(visitor_data))
-                send_mail('添加访客信息出错', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
-                return HttpResponse(status=403)
+                pass
+                # from django.core.mail import send_mail  # 导入django发送邮件模块
+                # content = "{}:{}".format(e.args[0], json.dumps(visitor_data))
+                # send_mail('添加访客信息出错', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
+                # return HttpResponse(status=403)
             return response
         # ip = False
         # if 'HTTP_X_FORWARDED_FOR' in request.META:
