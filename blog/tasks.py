@@ -30,8 +30,8 @@ def daily_mail():
     comment_day = Comment.objects.filter(add_date__year=now.year, add_date__month=now.month,
                                          add_date__day=now.day).count()
 
-    content = "今日访问量:{}</br>本月访问量:{}</br>今日评论数:{}</br>".format(visitor_month, visitor_day, comment_day)
-    send_mail('博客报告-{}:{}:{}'.format(now.year, now.month, now.day), content, EMAIL_HOST_USER, [ADMINS[0][1]],
+    content = "今日访问量:{}\n本月访问量:{}\n今日评论数:{}\n".format(visitor_month, visitor_day, comment_day)
+    send_mail('博客报告-{}-{}-{}'.format(now.year, now.month, now.day), content, EMAIL_HOST_USER, [ADMINS[0][1]],
               fail_silently=False)
 
 
