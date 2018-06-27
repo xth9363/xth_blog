@@ -33,8 +33,6 @@ class RecordIp(MiddlewareMixin):
             try:
                 if 'user_ip' not in request.session:
                     visitor_data = get_data.get_visitor_ip(request)
-                    print("visitor_data",visitor_data)
-                    print("visitor_data_b",bool(visitor_data))
                     if visitor_data:
                         add_visitor(visitor_data)  # 添加访客数据
                         request.session['user_ip'] = visitor_data
