@@ -42,8 +42,9 @@ def article_details(request, aid):
     next_article = models.Article.objects.filter(id__gt=aid).values('id', 'title').first()
     # 相关
     reakated_article = models.Article.objects.filter(
-        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).distinct()[:10].values('id',
-                                                                                                               'title')
+        Q(group=article.group) | Q(type=article.type) | Q(tags__in=article.tags.all())).exclude(type_id=3).distinct().order_by('?')[
+                       :10].values('id',
+                                   'title')
 
     visitor_data = request.session['user_ip'] if 'user_ip' in request.session else False
     context = {
@@ -192,9 +193,6 @@ def my_blog_list(request):
 # 错误处理页面
 def e_404(request, exception):
     return render(request, 'blog/404.html', {})
-
-
-
 
 
 def e_500(request):  # 这里一个坑
