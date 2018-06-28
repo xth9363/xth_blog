@@ -18,7 +18,7 @@ def add_visitor(visitor, url=None):
     if visitor:
         Visitor.objects.create(ip=visitor['ip'],
                                url=url,
-                               # location="{}|{}".format(visitor['country'], visitor['province'])
+                               location="{}|{}".format(visitor['country'], visitor['province'])
                                )
 
 
