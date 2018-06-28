@@ -30,7 +30,6 @@
 {#    <script src="/static/js/bootstrap.js"></script>#}
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.js"></script>
 
-    <script src="/static/js/popper.js" type="text/javascript"></script>
 
     <script src="/static/js/jquery.easyfader.min.js"></script>
     <script src="/static/js/conn.js"></script>
@@ -45,14 +44,6 @@
 
     <script src="/static/js/my_js.js"></script>
 
-
-    <script>
-        $(window).load(function () {
-            $("pre").addClass("prettyprint");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
-            $("pre").addClass("linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
-            prettyPrint();//代替body上的onload事件加载该方法
-        })
-    </script>
 
     <!--[if lt IE 9]>
 <script src="/static/js/modernizr.js"></script>
@@ -200,12 +191,14 @@
     {% endblock %}
 </article>
 <footer>
-    {#    <p>Design by <a href="http://www.yangqq.com" target="_blank">杨青个人博客</a> <a href="/">蜀ICP备11002373号-1</a></p>#}
+        <p>夏天浩 博客  浙ICP备18022027号-2</p>
 </footer>
 <a href="#" class="cd-top">Top</a>
 
 
+
 <script>
+    //这个必须在前
     window.tctipConfig = {
         //最上面的文字
         headText: "夏天浩 博客",
@@ -241,7 +234,7 @@
         }
     };
 </script>
-{#右边悬浮公告#}
+{#这个必须在后,是侧边公告#}
 <script src="/static/js/tctip.min.js"></script>
 
 {% block js %}

@@ -1,8 +1,7 @@
 {% extends 'blog/base.html' %}
 {% load my_tags %}
 {% block t_nav %}
-
-    <a class="n6" href="javascript:void(0)" onclick="backpage()" id="a_back">返回
+    <a class="n6" href="javascript:void(0)" onclick="backpage()" id="a_back">返回</a>
     <a href="{% url 'blog_index' %}" class="n1">网站首页</a>
     <a href="{% url 'get_type_articcles' article.type.id %}" class="n2">{{ article.type }}</a>
     {% if article.group %}
@@ -10,8 +9,8 @@
     {% endif %}
     <div class="n4">{{ article.title }}</div>
 {% endblock %}
-{% block html_content %}
 
+{% block html_content %}
     <div class="infosbox">
         <div class="newsview">
 
@@ -124,8 +123,7 @@
                             <input type="button" value="评论原文" id="comment_no_parent" class="pull-left btn btn-default">
                             <input type="submit" value="发布" class="pull-right btn btn-default">
                             <span class="pull-right"
-                                  style="padding: 5px;">{{ visitor_data.ip_save }}
-{#                                |{{ visitor_data.country }}{{ visitor_data.province }}{{ visitor_data.city }}#}
+                                  style="padding: 5px;">{{ visitor_data.ip_save }}|{{ visitor_data.country }}{{ visitor_data.province }}{{ visitor_data.city }}
                             </span>
                         </form>
                         <script>
@@ -165,6 +163,19 @@
 
         </div>
     </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/popper.js" type="text/javascript"></script>
+
+    <script>
+        $(window).load(function () {
+            $("pre").addClass("prettyprint");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
+            $("pre").addClass("linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
+            prettyPrint();//代替body上的onload事件加载该方法
+        })
+    </script>
 
 {% endblock %}
 

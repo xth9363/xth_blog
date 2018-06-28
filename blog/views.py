@@ -72,11 +72,11 @@ def post_comment(request):
         print(request.POST)
         if 'user_ip' in request.session:
             user_ip = request.session['user_ip']
-            # commenter = "{}|{}{}{}".format(user_ip['ip_save'],
-            #                                user_ip['country'],
-            #                                user_ip['province'],
-            #                                user_ip['city'])
-            commenter = "{}".format(user_ip['ip_save'])
+            commenter = "{}|{}{}{}".format(user_ip['ip_save'],
+                                           user_ip['country'],
+                                           user_ip['province'],
+                                           user_ip['city'])
+            # commenter = "{}".format(user_ip['ip_save'])
             aid = int(request.POST.get('aid'))
             if 'parent_id' in request.POST and request.POST.get('parent_id'):
                 models.Comment.objects.create(commenter=commenter,

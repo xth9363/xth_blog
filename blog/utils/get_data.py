@@ -46,24 +46,24 @@ def get_visitor_ip(req):
     if ip:
         result = ""
         try:
-            # result = rq.get(
-            #     'http://ip.taobao.com/service/getIpInfo.php?ip=%s' % ip)
-            # print(result.text)
-            # j_data = json.loads(result.text)['data']
-            # ip_split = ip.split('.')
-            # ip_split[3] = '*'
-            # ip = ".".join(ip_split)
+            result = rq.get(
+                'http://ip.taobao.com/service/getIpInfo.php?ip=%s' % ip)
+            print(result.text)
+            j_data = json.loads(result.text)['data']
+            ip_split = ip.split('.')
+            ip_split[3] = '*'
+            ip = ".".join(ip_split)
             return {'ip': ip,
                     'ip_save': ip_safe(ip),
-                    # 'country': j_data['country'],
-                    # 'province': j_data['region'],
-                    # 'city': j_data['city'],
-                    # 'isp': j_data['isp']
+                    'country': j_data['country'],
+                    'province': j_data['region'],
+                    'city': j_data['city'],
+                    'isp': j_data['isp']
                     }
         except Exception as e:
-            # from django.core.mail import send_mail  # 导入django发送邮件模块
-            # content = "{}:{}:{}".format(e.args[0], result.text, result.status_code)
-            # send_mail('获取IP所在地出错', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
+            from django.core.mail import send_mail  # 导入django发送邮件模块
+            content = "{}:{}:{}".format(e.args[0], result.text, result.status_code)
+            send_mail('获取IP所在地出错', content, EMAIL_HOST_USER, [ADMINS[0][1]], fail_silently=False)
             return False
     else:
         return False

@@ -24,7 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     path('blog/', include('blog.urls')),
-    path('assets/', include('assets.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),  # 富文本编辑器用
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
