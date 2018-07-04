@@ -16,6 +16,7 @@ from my_blog.settings import ADMINS, EMAIL_HOST_USER
 
 def add_visitor(visitor, url=None):
     if visitor:
+        print(visitor['ip'])
         Visitor.objects.create(ip=visitor['ip'],
                                url=url,
                                location="{}|{}".format(visitor['country'], visitor['province'])

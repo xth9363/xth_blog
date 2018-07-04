@@ -50,9 +50,6 @@ def get_visitor_ip(req):
                 'http://ip.taobao.com/service/getIpInfo.php?ip=%s' % ip)
             print(result.text)
             j_data = json.loads(result.text)['data']
-            ip_split = ip.split('.')
-            ip_split[3] = '*'
-            ip = ".".join(ip_split)
             return {'ip': ip,
                     'ip_save': ip_safe(ip),
                     'country': j_data['country'],
