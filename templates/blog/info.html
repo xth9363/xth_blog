@@ -10,6 +10,15 @@
     <div class="n4">{{ article.title }}</div>
 {% endblock %}
 
+
+{% block css %}
+    <style>
+    .news_con p{
+        text-indent: 2em;
+    }
+    </style>
+{% endblock %}
+
 {% block html_content %}
     <div class="infosbox">
         <div class="newsview">
@@ -164,13 +173,6 @@
         </div>
     </div>
 
-{% endblock %}
-{% block css %}
-    <style>
-    p{
-        text-indent: 2em;
-    }
-    </style>
 {% endblock %}
 {% block js %}
     <script src="/static/js/popper.js" type="text/javascript"></script>
