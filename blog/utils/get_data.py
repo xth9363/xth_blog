@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 from blog.utils._asd import is_int
 from my_blog.settings import ADMINS, EMAIL_HOST_USER
 
-LIMIT = 6
+LIMIT = 10
 
 
 def ip_safe(ip):
